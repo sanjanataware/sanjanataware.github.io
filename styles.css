@@ -26,12 +26,12 @@ body {
 /* Sidebar Navigation */
 #sidebar {
     position: fixed;
-    right: 0;
+    left: 0;
     top: 0;
     width: 200px;
     height: 100vh;
     background-color: #faf9f6;
-    border-left: 2px solid #e9c46a;
+    border-right: 2px solid #e9c46a;
     padding: 3rem 2rem;
     z-index: 1000;
     overflow-y: auto;
@@ -93,8 +93,8 @@ body {
 
 /* Main Content */
 main {
-    margin-left: 0;
-    margin-right: 200px;
+    margin-left: 200px;
+    margin-right: 0;
     max-width: 860px;
     padding: 3rem 3.5rem;
 }
