@@ -21,35 +21,28 @@ body {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: radial-gradient(
-        circle 400px at var(--mx, -999px) var(--my, -999px),
-        rgba(233, 196, 106, 0.22) 0%,
-        rgba(42, 157, 143, 0.10) 50%,
-        transparent 100%
-    );
 }
 
 /* Sidebar Navigation */
 #sidebar {
     position: fixed;
-    left: 0;
+    right: 0;
     top: 0;
-    width: 220px;
+    width: 200px;
     height: 100vh;
     background-color: #faf9f6;
-    border-right: 2px solid #e9c46a;
-    padding: 2.5rem 1.5rem;
+    border-left: 2px solid #e9c46a;
+    padding: 3rem 2rem;
     z-index: 1000;
     overflow-y: auto;
 }
 
 .sidebar-name {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #264653;
-    letter-spacing: 0.01em;
-    padding-bottom: 1rem;
-    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
     border-bottom: 2px solid #e9c46a;
     display: block;
 }
@@ -62,16 +55,21 @@ body {
     display: block;
     text-decoration: none;
     color: #264653;
-    font-weight: 500;
-    font-size: 0.95rem;
-    padding: 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.4rem 0;
     cursor: pointer;
     transition: color 0.2s ease;
+    border-bottom: 1.5px solid transparent;
 }
 
-.nav-link:hover,
-.nav-link.active {
+.nav-link:hover {
     color: #2a9d8f;
+}
+
+.nav-link.active {
+    color: #264653;
+    border-bottom: 1.5px solid #e9c46a;
 }
 
 #mobile-menu-btn {
@@ -95,9 +93,10 @@ body {
 
 /* Main Content */
 main {
-    margin-left: 220px;
+    margin-left: 0;
+    margin-right: 200px;
     max-width: 860px;
-    padding: 3rem 3rem 3rem 3.5rem;
+    padding: 3rem 3.5rem;
 }
 
 section {
@@ -817,8 +816,9 @@ footer p {
         height: auto;
         position: fixed;
         top: 0;
+        right: 0;
         left: 0;
-        border-right: none;
+        border-left: none;
         border-bottom: 2px solid #e9c46a;
         padding: 0.75rem 1rem;
         display: flex;
@@ -857,7 +857,7 @@ footer p {
     }
 
     main {
-        margin-left: 0;
+        margin-right: 0;
         margin-top: 56px;
         padding: 1.5rem 1rem;
     }
