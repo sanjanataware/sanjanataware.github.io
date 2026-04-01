@@ -50,6 +50,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
+    // --- Spotlight cursor effect ---
+    const spotlight = document.getElementById('spotlight');
+    document.addEventListener('mousemove', (e) => {
+        spotlight.style.background = `radial-gradient(circle 55px at ${e.clientX}px ${e.clientY}px, rgba(233,196,106,0.22) 0%, rgba(233,196,106,0.05) 70%, transparent 100%)`;
+    });
+
     // --- Mobile menu toggle ---
     const menuBtn = document.getElementById('mobile-menu-btn');
     const sidebar = document.getElementById('sidebar');
