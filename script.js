@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Spotlight cursor effect ---
     const spotlight = document.getElementById('spotlight');
     document.addEventListener('mousemove', (e) => {
-        spotlight.style.background = `radial-gradient(circle 420px at ${e.clientX}px ${e.clientY}px, rgba(233,196,106,0.25) 0%, rgba(42,157,143,0.12) 50%, transparent 100%)`;
+        spotlight.style.background = `radial-gradient(circle 120px at ${e.clientX}px ${e.clientY}px, rgba(233,196,106,0.18) 0%, transparent 100%)`;
     });
 
     // --- Mobile menu toggle ---
