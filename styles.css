@@ -22,12 +22,11 @@ body {
     inset: 0;
     z-index: 9999;
     background: radial-gradient(
-        circle 320px at var(--mx, -999px) var(--my, -999px),
-        rgba(233, 196, 106, 0.13) 0%,
-        rgba(42, 157, 143, 0.06) 50%,
+        circle 400px at var(--mx, -999px) var(--my, -999px),
+        rgba(233, 196, 106, 0.22) 0%,
+        rgba(42, 157, 143, 0.10) 50%,
         transparent 100%
     );
-    transition: background 0.05s ease;
 }
 
 /* Sidebar Navigation */
@@ -35,14 +34,11 @@ body {
     position: fixed;
     left: 0;
     top: 0;
-    width: 210px;
+    width: 220px;
     height: 100vh;
     background-color: #faf9f6;
-    border-right: 1px solid #e9c46a;
+    border-right: 2px solid #e9c46a;
     padding: 2.5rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
     z-index: 1000;
     overflow-y: auto;
 }
@@ -53,22 +49,24 @@ body {
     color: #264653;
     letter-spacing: 0.01em;
     padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
     border-bottom: 2px solid #e9c46a;
+    display: block;
 }
 
 .sidebar-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    display: block;
 }
 
 .nav-link {
+    display: block;
     text-decoration: none;
     color: #264653;
     font-weight: 500;
     font-size: 0.95rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
     transition: color 0.2s ease;
-    padding: 0.3rem 0;
 }
 
 .nav-link:hover,
@@ -80,9 +78,24 @@ body {
     display: none;
 }
 
+/* Tab sections */
+.tab-section {
+    display: none;
+}
+
+.tab-section.active {
+    display: block;
+    animation: tabFadeIn 0.35s ease forwards;
+}
+
+@keyframes tabFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
 /* Main Content */
 main {
-    margin-left: 210px;
+    margin-left: 220px;
     max-width: 860px;
     padding: 3rem 3rem 3rem 3.5rem;
 }
@@ -800,41 +813,37 @@ footer p {
 /* Responsive Design */
 @media (max-width: 768px) {
     #sidebar {
+        width: 100%;
+        height: auto;
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: auto;
+        border-right: none;
+        border-bottom: 2px solid #e9c46a;
+        padding: 0.75rem 1rem;
+        display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 0;
-        padding: 0.75rem 1rem;
-        border-right: none;
-        border-bottom: 1px solid #e9c46a;
-        box-shadow: 0 2px 4px rgba(38, 70, 83, 0.1);
-        overflow: hidden;
         flex-wrap: wrap;
     }
 
     .sidebar-name {
         border-bottom: none;
+        margin-bottom: 0;
         padding-bottom: 0;
-        font-size: 0.95rem;
         flex: 1;
     }
 
     .sidebar-links {
         display: none;
-        flex-direction: column;
-        gap: 0.5rem;
         width: 100%;
         padding-top: 0.75rem;
-        border-top: 1px solid #e9c46a;
         margin-top: 0.5rem;
+        border-top: 1px solid #e9c46a;
     }
 
     #sidebar.open .sidebar-links {
-        display: flex;
+        display: block;
     }
 
     #mobile-menu-btn {

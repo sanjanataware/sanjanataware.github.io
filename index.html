@@ -10,18 +10,18 @@
     <nav id="sidebar">
         <div class="sidebar-name">Sanjana Taware</div>
         <div class="sidebar-links">
-            <a href="#about" class="nav-link">About</a>
-            <a href="#experience" class="nav-link">Experience</a>
-            <a href="#projects" class="nav-link">Projects</a>
-            <a href="#writing" class="nav-link">Writing</a>
-            <a href="#classes" class="nav-link">Classes</a>
+            <a class="nav-link active" data-section="about">About</a>
+            <a class="nav-link" data-section="experience">Experience</a>
+            <a class="nav-link" data-section="projects">Projects</a>
+            <a class="nav-link" data-section="writing">Writing</a>
+            <a class="nav-link" data-section="classes">Classes</a>
         </div>
     </nav>
 
     <button id="mobile-menu-btn" aria-label="Toggle menu">&#9776;</button>
 
     <main>
-        <section id="about">
+        <section id="about" class="tab-section active">
             <h1>About</h1>
             <div class="about-content">
                 <div class="about-text">
@@ -47,7 +47,7 @@
             </div>
         </section>
 
-        <section id="experience">
+        <section id="experience" class="tab-section">
             <h1>Experience</h1>
 
             <div class="year-block">
@@ -147,7 +147,7 @@
             </div>
         </section>
 
-        <section id="projects">
+        <section id="projects" class="tab-section">
             <div class="section-header">
                 <h1>Projects</h1>
                 <svg class="projects-animation" width="80" height="80" viewBox="0 0 100 100">
@@ -176,7 +176,7 @@
             </ul>
         </section>
 
-        <section id="writing">
+        <section id="writing" class="tab-section">
             <div class="section-header">
                 <h1>Writing</h1>
                 <svg class="writing-animation" width="80" height="80" viewBox="0 0 80 80">
@@ -205,7 +205,7 @@
             </ul>
         </section>
 
-        <section id="classes">
+        <section id="classes" class="tab-section">
             <div class="section-header">
                 <h1>Classes</h1>
                 <svg class="classes-animation" width="80" height="80" viewBox="0 0 100 100">
