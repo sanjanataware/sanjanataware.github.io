@@ -31,6 +31,66 @@ document.addEventListener('DOMContentLoaded', function() {
     ).forEach(el => animationObserver.observe(el));
 
 
+    // --- Articles carousel (Writing section) ---
+    const carousel = document.getElementById('articles-carousel');
+    if (carousel) {
+        const formatDate = (iso) => {
+            const d = new Date(iso + 'T00:00:00');
+            return isNaN(d) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        };
+
+        fetch('articles.json?v=' + Date.now())
+            .then(res => res.json())
+            .then(articles => {
+                carousel.innerHTML = '';
+                articles.forEach(article => {
+                    const card = document.createElement('a');
+                    card.className = 'article-card';
+                    card.href = 'article.html?id=' + encodeURIComponent(article.id);
+
+                    const thumb = document.createElement('div');
+                    thumb.className = 'article-thumb';
+                    if (article.thumbnail) {
+                        const img = document.createElement('img');
+                        img.src = article.thumbnail;
+                        img.alt = article.title;
+                        img.loading = 'lazy';
+                        thumb.appendChild(img);
+                    } else {
+                        thumb.classList.add('article-thumb-placeholder');
+                        const initial = document.createElement('span');
+                        initial.textContent = article.title.charAt(0).toUpperCase();
+                        thumb.appendChild(initial);
+                    }
+
+                    const body = document.createElement('div');
+                    body.className = 'article-card-body';
+                    const title = document.createElement('h4');
+                    title.textContent = article.title;
+                    const date = document.createElement('p');
+                    date.className = 'article-date';
+                    date.textContent = formatDate(article.date);
+                    body.appendChild(title);
+                    body.appendChild(date);
+
+                    card.appendChild(thumb);
+                    card.appendChild(body);
+                    carousel.appendChild(card);
+                });
+            })
+            .catch(() => {
+                carousel.innerHTML = '<p class="carousel-loading">Couldn\'t load articles. You can still find my writing on <a href="https://medium.com/@sanjana.taware" target="_blank">Medium</a>.</p>';
+            });
+
+        document.querySelector('.carousel-prev').addEventListener('click', () => {
+            carousel.scrollBy({ left: -carousel.clientWidth * 0.8, behavior: 'smooth' });
+        });
+        document.querySelector('.carousel-next').addEventListener('click', () => {
+            carousel.scrollBy({ left: carousel.clientWidth * 0.8, behavior: 'smooth' });
+        });
+    }
+
+
     // --- Spotlight cursor effect ---
     const spotlight = document.getElementById('spotlight');
     document.addEventListener('mousemove', (e) => {
