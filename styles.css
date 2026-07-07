@@ -92,8 +92,14 @@ section {
     scroll-margin-top: 72px;
 }
 
+h1, h2, h3, .nav-name {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
 h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
     margin-bottom: 1.5rem;
     color: #264653;
     border-bottom: 2px solid #e9c46a;
@@ -101,13 +107,15 @@ h1 {
 }
 
 h2 {
-    font-size: 1.5rem;
+    font-size: 1.55rem;
+    font-weight: 600;
     margin-bottom: 1rem;
     color: #2a9d8f;
 }
 
 h3 {
     font-size: 1.25rem;
+    font-weight: 600;
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
     color: #264653;
@@ -782,6 +790,153 @@ a:hover {
     margin-bottom: 0.5rem;
 }
 
+/* Hobbies Animation - Water Polo Ball on Waves */
+.hobbies-animation {
+    opacity: 0;
+}
+
+.hobbies-animation.animate {
+    animation: fadeIn 1s ease-in forwards;
+}
+
+.hobby-wave {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
+}
+
+.hobbies-animation.animate .hobby-wave-1 {
+    animation: drawLine 1.2s ease-out forwards, waveDrift 3.5s ease-in-out infinite;
+    animation-delay: 0.4s, 2s;
+}
+
+.hobbies-animation.animate .hobby-wave-2 {
+    animation: drawLine 1.2s ease-out forwards, waveDrift 3.5s ease-in-out infinite reverse;
+    animation-delay: 0.7s, 2.3s;
+}
+
+.hobby-ball {
+    opacity: 0;
+    transform: translateY(-25px);
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.hobbies-animation.animate .hobby-ball {
+    animation: ballDrop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, ballBob 2.6s ease-in-out infinite;
+    animation-delay: 1.2s, 2.4s;
+}
+
+@keyframes waveDrift {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes ballDrop {
+    0% {
+        opacity: 0;
+        transform: translateY(-25px);
+    }
+    70% {
+        opacity: 1;
+        transform: translateY(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ballBob {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-6px) rotate(10deg);
+    }
+}
+
+/* Animation polish - continuous motion overrides */
+
+/* Sun: slow rotation once risen */
+.email-decoration.animate {
+    animation: fadeIn 1s ease-in forwards, sunSpin 30s linear infinite;
+    animation-delay: 0s, 2.5s;
+}
+
+@keyframes sunSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* EEG: sweeping monitor-style redraw instead of opacity pulse */
+.year-animation.animate .eeg-wave {
+    animation: drawLine 2.5s ease-in-out forwards, eegFlow 5s linear infinite;
+    animation-delay: 0.5s, 3.2s;
+}
+
+@keyframes eegFlow {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: -500;
+    }
+}
+
+/* PCB: signal pulses travel along the traces after drawing */
+.year-animation.animate .pcb-trace-1 {
+    animation: drawLine 0.8s ease-out forwards, traceFlow 2.2s linear infinite;
+    animation-delay: 1s, 2.8s;
+}
+
+.year-animation.animate .pcb-trace-2 {
+    animation: drawLine 0.8s ease-out forwards, traceFlow 2.2s linear infinite;
+    animation-delay: 1.3s, 3.2s;
+}
+
+.year-animation.animate .pcb-trace-3 {
+    animation: drawLine 0.8s ease-out forwards, traceFlow 2.2s linear infinite;
+    animation-delay: 1.6s, 3.6s;
+}
+
+@keyframes traceFlow {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: -100;
+    }
+}
+
+/* Chip joins the component glow cycle */
+.year-animation.animate .pcb-chip {
+    animation: popIn 0.5s ease-out forwards, componentGlow 2s ease-in-out infinite;
+    animation-delay: 2.4s, 3.6s;
+}
+
+/* Magnifying glass: gentle searching sweep */
+.projects-animation.animate {
+    animation: fadeIn 1s ease-in forwards, magSearch 5s ease-in-out infinite;
+    animation-delay: 0s, 3s;
+}
+
+@keyframes magSearch {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    30% {
+        transform: translate(-4px, 2px) rotate(-4deg);
+    }
+    65% {
+        transform: translate(4px, -2px) rotate(4deg);
+    }
+}
+
 /* Articles Carousel */
 .carousel-wrap {
     position: relative;
@@ -1038,6 +1193,7 @@ footer p {
     .projects-animation,
     .writing-animation,
     .classes-animation,
+    .hobbies-animation,
     .year-animation {
         width: 70px;
         height: 70px;

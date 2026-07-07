@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.2 });
 
     document.querySelectorAll(
-        '.email-decoration, .year-animation, .projects-animation, .writing-animation, .classes-animation'
+        '.email-decoration, .year-animation, .projects-animation, .writing-animation, .classes-animation, .hobbies-animation'
     ).forEach(el => animationObserver.observe(el));
 
 
