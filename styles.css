@@ -1022,14 +1022,20 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 1rem 1.1rem;
     background: linear-gradient(135deg, #2a9d8f 0%, #264653 100%);
 }
 
 .article-thumb-placeholder span {
-    font-size: 3rem;
-    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    font-weight: 600;
     color: #e9c46a;
     font-family: Georgia, 'Times New Roman', serif;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .article-card-body {

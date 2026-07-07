@@ -58,9 +58,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         thumb.appendChild(img);
                     } else {
                         thumb.classList.add('article-thumb-placeholder');
-                        const initial = document.createElement('span');
-                        initial.textContent = article.title.charAt(0).toUpperCase();
-                        thumb.appendChild(initial);
+                        const snippet = document.createElement('span');
+                        const plain = (article.excerpt || article.content || '')
+                            .replace(/<[^>]*>/g, ' ')
+                            .replace(/\s+/g, ' ')
+                            .trim();
+                        const words = plain.split(' ').slice(0, 14).join(' ');
+                        snippet.textContent = words + (plain.split(' ').length > 14 ? '…' : '');
+                        thumb.appendChild(snippet);
                     }
 
                     const body = document.createElement('div');
