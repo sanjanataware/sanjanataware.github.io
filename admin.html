@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Article Manager</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #264653;
+            background-color: #faf9f6;
+            padding: 2rem 1rem 4rem;
+        }
+        .admin-wrap { max-width: 760px; margin: 0 auto; }
+        h1 {
+            font-size: 1.6rem;
+            border-bottom: 2px solid #e9c46a;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 { font-size: 1.15rem; color: #2a9d8f; margin-bottom: 0.75rem; }
+        .panel {
+            background: #ffffff;
+            border-radius: 10px;
+            border-left: 4px solid #e76f51;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 8px rgba(38, 70, 83, 0.06);
+        }
+        label { display: block; font-weight: 600; font-size: 0.9rem; margin: 1rem 0 0.25rem; }
+        label:first-of-type { margin-top: 0; }
+        input[type="text"], input[type="date"], input[type="url"], input[type="password"], textarea, select {
+            width: 100%;
+            padding: 0.55rem 0.7rem;
+            border: 1.5px solid #d8d2c4;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: #264653;
+            background: #faf9f6;
+        }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #2a9d8f; }
+        textarea { min-height: 320px; resize: vertical; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.88rem; }
+        .hint { font-size: 0.8rem; color: #7d8a90; margin-top: 0.25rem; }
+        button {
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+        button:hover { opacity: 0.85; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: #2a9d8f; color: #ffffff; }
+        .btn-secondary { background: #e9c46a; color: #264653; }
+        .btn-danger { background: #e76f51; color: #ffffff; }
+        .btn-small { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
+        .btn-row { display: flex; gap: 0.75rem; margin-top: 1.25rem; flex-wrap: wrap; }
+        .status {
+            margin-top: 1rem;
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .status.show { display: block; }
+        .status.ok { background: #e3f4f2; color: #1d7268; }
+        .status.err { background: #fbe9e3; color: #b74a2f; }
+        .status.busy { background: #fdf3dd; color: #8a6d1f; }
+        .article-row {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #f0ebe0;
+        }
+        .article-row:last-child { border-bottom: none; }
+        .article-row-thumb {
+            width: 64px;
+            height: 44px;
+            border-radius: 5px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #2a9d8f, #264653);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e9c46a;
+            font-weight: 700;
+            font-size: 1.2rem;
+            overflow: hidden;
+        }
+        .article-row-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .article-row-info { flex: 1; min-width: 0; }
+        .article-row-info strong { display: block; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .article-row-info span { font-size: 0.78rem; color: #2a9d8f; }
+        .article-row-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+        .thumb-preview { margin-top: 0.5rem; max-width: 240px; border-radius: 8px; display: none; }
+        .thumb-preview.show { display: block; }
+        details.help { margin-bottom: 1.5rem; font-size: 0.88rem; }
+        details.help summary { cursor: pointer; font-weight: 600; color: #2a9d8f; }
+        details.help ol { margin: 0.75rem 0 0 1.4rem; }
+        details.help li { margin-bottom: 0.4rem; }
+        details.help code { background: #f0ebe0; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.82rem; }
+        .token-row { display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap; }
+        .token-row > div { flex: 1; min-width: 240px; }
+        #editing-banner {
+            display: none;
+            background: #fdf3dd;
+            color: #8a6d1f;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        #editing-banner.show { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="admin-wrap">
+        <h1>Article Manager</h1>
+
+        <details class="help">
+            <summary>How this works / first-time setup</summary>
+            <ol>
+                <li>This page is your private publishing tool. It isn't linked anywhere on your website, and it holds no secrets — publishing only works with <em>your</em> GitHub token, which is saved only in this browser.</li>
+                <li>Create a token at <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">github.com/settings/personal-access-tokens/new</a>: give it a name like <code>portfolio-admin</code>, set Repository access to <strong>Only select repositories → sanjanataware.github.io</strong>, and under Permissions set <strong>Contents → Read and write</strong>. Copy the token and paste it below.</li>
+                <li>Fill out the form, hit <strong>Publish</strong>, and the article is committed to your repo. GitHub Pages redeploys in about a minute.</li>
+                <li>Content is written in Markdown: <code># Heading</code>, <code>**bold**</code>, <code>*italic*</code>, <code>[link text](url)</code>, <code>![caption](image-url)</code>, <code>&gt; quote</code>, <code>- list item</code>.</li>
+            </ol>
+        </details>
+
+        <div class="panel">
+            <h2>GitHub Connection</h2>
+            <div class="token-row">
+                <div>
+                    <label for="gh-token">Personal access token</label>
+                    <input type="password" id="gh-token" placeholder="github_pat_...">
+                </div>
+                <button class="btn-secondary" id="save-token">Save &amp; Connect</button>
+            </div>
+            <div class="status" id="conn-status"></div>
+        </div>
+
+        <div class="panel">
+            <h2 id="form-title">New Article</h2>
+            <div id="editing-banner">
+                <span>Editing an existing article.</span>
+                <button class="btn-secondary btn-small" id="cancel-edit">Cancel edit</button>
+            </div>
+
+            <label for="f-title">Title</label>
+            <input type="text" id="f-title" placeholder="My new article">
+
+            <label for="f-date">Date</label>
+            <input type="date" id="f-date">
+
+            <label for="f-thumb">Thumbnail</label>
+            <input type="file" id="f-thumb" accept="image/*">
+            <p class="hint">Optional. Gets resized automatically. If left empty, the site shows a styled placeholder.</p>
+            <img class="thumb-preview" id="thumb-preview" alt="Thumbnail preview">
+
+            <label for="f-format">Content format</label>
+            <select id="f-format">
+                <option value="markdown">Markdown (recommended)</option>
+                <option value="html">Raw HTML</option>
+            </select>
+
+            <label for="f-content">Content</label>
+            <textarea id="f-content" placeholder="Write your article here…&#10;&#10;# A heading&#10;&#10;Some **bold** text, a [link](https://example.com), and an image:&#10;&#10;![caption](https://example.com/image.jpg)"></textarea>
+
+            <label for="f-original">Original URL (optional)</label>
+            <input type="url" id="f-original" placeholder="https://medium.com/@sanjana.taware/…">
+            <p class="hint">If set, the article page shows an "Originally published on Medium" link.</p>
+
+            <div class="btn-row">
+                <button class="btn-primary" id="publish">Publish to website</button>
+                <button class="btn-secondary" id="preview">Preview</button>
+            </div>
+            <div class="status" id="pub-status"></div>
+        </div>
+
+        <div class="panel">
+            <h2>Published Articles</h2>
+            <div id="article-list"><p class="hint">Connect with your token above to load articles.</p></div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        const OWNER = 'sanjanataware';
+        const REPO = 'sanjanataware.github.io';
+        const BRANCH = 'main';
+        const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
+
+        let articles = [];
+        let articlesSha = null;
+        let editingId = null;
+        let thumbData = null;   // { base64, ext } pending upload
+
+        const $ = (id) => document.getElementById(id);
+
+        // ---------- helpers ----------
+        function token() { return localStorage.getItem('gh_token') || ''; }
+
+        function headers() {
+            return {
+                'Authorization': 'Bearer ' + token(),
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            };
+        }
+
+        function setStatus(el, cls, msg) {
+            el.className = 'status show ' + cls;
+            el.textContent = msg;
+        }
+
+        function b64EncodeUtf8(str) {
+            const bytes = new TextEncoder().encode(str);
+            let bin = '';
+            bytes.forEach(b => bin += String.fromCharCode(b));
+            return btoa(bin);
+        }
+
+        function b64DecodeUtf8(b64) {
+            const bin = atob(b64.replace(/\n/g, ''));
+            const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+            return new TextDecoder().decode(bytes);
+        }
+
+        function slugify(title) {
+            return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'article';
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // Minimal Markdown -> HTML (headings, bold, italic, links, images, quotes, lists, hr)
+        function markdownToHtml(md) {
+            const lines = md.replace(/\r\n/g, '\n').split('\n');
+            const out = [];
+            let para = [], listType = null;
+
+            const inline = (s) => escapeHtml(s)
+                .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, '<figure><img src="$2" alt="$1">' +
+                    '<figcaption>$1</figcaption></figure>')
+                .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+            const flushPara = () => {
+                if (para.length) { out.push('<p>' + para.map(inline).join('<br>') + '</p>'); para = []; }
+            };
+            const flushList = () => {
+                if (listType) { out.push('</' + listType + '>'); listType = null; }
+            };
+
+            for (const raw of lines) {
+                const line = raw.trimEnd();
+                const h = line.match(/^(#{1,4})\s+(.*)/);
+                const li = line.match(/^[-*]\s+(.*)/);
+                const ol = line.match(/^\d+\.\s+(.*)/);
+
+                if (!line.trim()) { flushPara(); flushList(); continue; }
+                if (h) {
+                    flushPara(); flushList();
+                    const lvl = Math.min(h[1].length + 2, 5); // # -> h3 (h1/h2 reserved for page)
+                    out.push(`<h${lvl}>` + inline(h[2]) + `</h${lvl}>`);
+                } else if (/^(---|\*\*\*)\s*$/.test(line)) {
+                    flushPara(); flushList(); out.push('<hr>');
+                } else if (line.startsWith('> ')) {
+                    flushPara(); flushList();
+                    out.push('<blockquote><p>' + inline(line.slice(2)) + '</p></blockquote>');
+                } else if (li || ol) {
+                    flushPara();
+                    const want = li ? 'ul' : 'ol';
+                    if (listType !== want) { flushList(); out.push('<' + want + '>'); listType = want; }
+                    out.push('<li>' + inline((li || ol)[1]) + '</li>');
+                } else {
+                    flushList();
+                    para.push(line);
+                }
+            }
+            flushPara(); flushList();
+            return out.join('\n');
+        }
+
+        function excerptOf(html) {
+            const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+            return text.length > 160 ? text.slice(0, 157) + '…' : text;
+        }
+
+        // ---------- GitHub API ----------
+        async function ghGet(path) {
+            const res = await fetch(API + path + '?ref=' + BRANCH, { headers: headers() });
+            if (res.status === 404) return null;
+            if (!res.ok) throw new Error('GitHub API error ' + res.status + ' loading ' + path);
+            return res.json();
+        }
+
+        async function ghPut(path, base64Content, message, sha) {
+            const body = { message, content: base64Content, branch: BRANCH };
+            if (sha) body.sha = sha;
+            const res = await fetch(API + path, {
+                method: 'PUT',
+                headers: { ...headers(), 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error('GitHub API error ' + res.status + ': ' + (err.message || 'unknown'));
+            }
+            return res.json();
+        }
+
+        async function loadArticles() {
+            const connStatus = $('conn-status');
+            setStatus(connStatus, 'busy', 'Connecting to GitHub…');
+            try {
+                const file = await ghGet('articles.json');
+                if (!file) throw new Error('articles.json not found in the repo.');
+                articles = JSON.parse(b64DecodeUtf8(file.content));
+                articlesSha = file.sha;
+                setStatus(connStatus, 'ok', `Connected — ${articles.length} articles loaded.`);
+                renderList();
+            } catch (e) {
+                setStatus(connStatus, 'err', e.message + ' (check your token)');
+            }
+        }
+
+        async function saveArticles(message) {
+            const result = await ghPut('articles.json',
+                b64EncodeUtf8(JSON.stringify(articles, null, 2)), message, articlesSha);
+            articlesSha = result.content.sha;
+        }
+
+        // ---------- UI ----------
+        function renderList() {
+            const list = $('article-list');
+            if (!articles.length) { list.innerHTML = '<p class="hint">No articles yet.</p>'; return; }
+            list.innerHTML = '';
+            for (const a of articles) {
+                const row = document.createElement('div');
+                row.className = 'article-row';
+
+                const thumb = document.createElement('div');
+                thumb.className = 'article-row-thumb';
+                if (a.thumbnail) {
+                    const img = document.createElement('img');
+                    img.src = 'https://raw.githubusercontent.com/' + OWNER + '/' + REPO + '/' + BRANCH + '/' + a.thumbnail;
+                    thumb.appendChild(img);
+                } else {
+                    thumb.textContent = a.title.charAt(0).toUpperCase();
+                }
+
+                const info = document.createElement('div');
+                info.className = 'article-row-info';
+                info.innerHTML = '<strong></strong><span></span>';
+                info.querySelector('strong').textContent = a.title;
+                info.querySelector('span').textContent = a.date;
+
+                const actions = document.createElement('div');
+                actions.className = 'article-row-actions';
+                const editBtn = document.createElement('button');
+                editBtn.className = 'btn-secondary btn-small';
+                editBtn.textContent = 'Edit';
+                editBtn.onclick = () => startEdit(a.id);
+                const delBtn = document.createElement('button');
+                delBtn.className = 'btn-danger btn-small';
+                delBtn.textContent = 'Delete';
+                delBtn.onclick = () => deleteArticle(a.id);
+                actions.append(editBtn, delBtn);
+
+                row.append(thumb, info, actions);
+                list.appendChild(row);
+            }
+        }
+
+        function resetForm() {
+            editingId = null;
+            thumbData = null;
+            $('f-title').value = '';
+            $('f-date').valueAsDate = new Date();
+            $('f-thumb').value = '';
+            $('thumb-preview').className = 'thumb-preview';
+            $('f-format').value = 'markdown';
+            $('f-content').value = '';
+            $('f-original').value = '';
+            $('form-title').textContent = 'New Article';
+            $('editing-banner').className = '';
+        }
+
+        function startEdit(id) {
+            const a = articles.find(x => x.id === id);
+            if (!a) return;
+            resetForm();
+            editingId = id;
+            $('f-title').value = a.title;
+            $('f-date').value = a.date;
+            $('f-original').value = a.originalUrl || '';
+            if (a.markdown) {
+                $('f-format').value = 'markdown';
+                $('f-content').value = a.markdown;
+            } else {
+                $('f-format').value = 'html';
+                $('f-content').value = a.content;
+            }
+            $('form-title').textContent = 'Edit Article';
+            $('editing-banner').className = 'show';
+            window.scrollTo({ top: $('form-title').offsetTop - 80, behavior: 'smooth' });
+        }
+
+        async function deleteArticle(id) {
+            const a = articles.find(x => x.id === id);
+            if (!a || !confirm('Delete "' + a.title + '" from the website?')) return;
+            const connStatus = $('conn-status');
+            setStatus(connStatus, 'busy', 'Deleting…');
+            try {
+                articles = articles.filter(x => x.id !== id);
+                await saveArticles('Delete article: ' + a.title);
+                setStatus(connStatus, 'ok', 'Deleted. The site updates in about a minute.');
+                renderList();
+            } catch (e) {
+                setStatus(connStatus, 'err', e.message);
+                await loadArticles();
+            }
+        }
+
+        // Resize the chosen image to a web-friendly JPEG thumbnail
+        function processThumb(file) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    const maxW = 1200;
+                    const scale = Math.min(1, maxW / img.width);
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.round(img.width * scale);
+                    canvas.height = Math.round(img.height * scale);
+                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                    resolve({ base64: dataUrl.split(',')[1], ext: '.jpg', dataUrl });
+                };
+                img.onerror = () => reject(new Error('Could not read that image file.'));
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        async function publish() {
+            const pubStatus = $('pub-status');
+            const title = $('f-title').value.trim();
+            const date = $('f-date').value;
+            const raw = $('f-content').value.trim();
+            const format = $('f-format').value;
+            const originalUrl = $('f-original').value.trim();
+
+            if (!token()) { setStatus(pubStatus, 'err', 'Connect your GitHub token first (top of page).'); return; }
+            if (!title) { setStatus(pubStatus, 'err', 'Title is required.'); return; }
+            if (!date) { setStatus(pubStatus, 'err', 'Date is required.'); return; }
+            if (!raw) { setStatus(pubStatus, 'err', 'Content is empty.'); return; }
+            if (articlesSha === null) { setStatus(pubStatus, 'err', 'Articles not loaded yet — connect first.'); return; }
+
+            $('publish').disabled = true;
+            try {
+                const content = format === 'markdown' ? markdownToHtml(raw) : raw;
+                let article = editingId ? articles.find(x => x.id === editingId) : null;
+
+                if (!article) {
+                    let id = slugify(title), n = 2;
+                    while (articles.some(a => a.id === id)) id = slugify(title) + '-' + n++;
+                    article = { id };
+                    articles.push(article);
+                }
+
+                Object.assign(article, { title, date, content, excerpt: excerptOf(content) });
+                if (format === 'markdown') article.markdown = raw; else delete article.markdown;
+                if (originalUrl) article.originalUrl = originalUrl; else delete article.originalUrl;
+
+                if (thumbData) {
+                    setStatus(pubStatus, 'busy', 'Uploading thumbnail…');
+                    const path = 'thumbnails/' + article.id + thumbData.ext;
+                    const existing = await ghGet(path);
+                    await ghPut(path, thumbData.base64, 'Add thumbnail for: ' + title, existing && existing.sha);
+                    article.thumbnail = path;
+                }
+                if (!article.thumbnail) article.thumbnail = '';
+
+                articles.sort((a, b) => (a.date < b.date ? 1 : -1));
+
+                setStatus(pubStatus, 'busy', 'Publishing article…');
+                await saveArticles((editingId ? 'Update article: ' : 'Add article: ') + title);
+
+                setStatus(pubStatus, 'ok', 'Published! Your website updates in about a minute.');
+                renderList();
+                resetForm();
+            } catch (e) {
+                setStatus(pubStatus, 'err', e.message);
+            } finally {
+                $('publish').disabled = false;
+            }
+        }
+
+        function preview() {
+            const raw = $('f-content').value;
+            const content = $('f-format').value === 'markdown' ? markdownToHtml(raw) : raw;
+            const win = window.open('', '_blank');
+            win.document.write(
+                '<link rel="stylesheet" href="styles.css">' +
+                '<main class="article-page"><h1>' + escapeHtml($('f-title').value || 'Untitled') + '</h1>' +
+                '<p class="article-meta">' + escapeHtml($('f-date').value) + '</p>' +
+                '<div class="article-content">' + content + '</div></main>'
+            );
+            win.document.close();
+        }
+
+        // ---------- events ----------
+        $('save-token').addEventListener('click', () => {
+            const t = $('gh-token').value.trim();
+            if (t) localStorage.setItem('gh_token', t);
+            loadArticles();
+        });
+
+        $('f-thumb').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) { thumbData = null; $('thumb-preview').className = 'thumb-preview'; return; }
+            try {
+                thumbData = await processThumb(file);
+                const prev = $('thumb-preview');
+                prev.src = thumbData.dataUrl;
+                prev.className = 'thumb-preview show';
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        $('publish').addEventListener('click', publish);
+        $('preview').addEventListener('click', preview);
+        $('cancel-edit').addEventListener('click', resetForm);
+
+        // ---------- init ----------
+        $('f-date').valueAsDate = new Date();
+        if (token()) {
+            $('gh-token').value = token();
+            loadArticles();
+        }
+    })();
+    </script>
+</body>
+</html>

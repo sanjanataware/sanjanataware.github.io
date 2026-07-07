@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing - Sanjana Taware</title>
+    <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+    <nav id="topnav">
+        <div class="nav-name"><a href="index.html" style="text-decoration: none; color: inherit;">Sanjana Taware</a></div>
+        <div class="nav-links">
+            <a class="nav-link" href="index.html#about">About</a>
+            <a class="nav-link" href="index.html#experience">Experience</a>
+            <a class="nav-link" href="index.html#projects">Projects</a>
+            <a class="nav-link active" href="index.html#writing">Writing</a>
+            <a class="nav-link" href="index.html#classes">Classes</a>
+        </div>
+    </nav>
+
+    <main class="article-page">
+        <a class="article-back" href="index.html#writing">&#8249; Back to all writing</a>
+        <article id="article-container">
+            <p class="carousel-loading">Loading article…</p>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Sanjana Taware</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('article-container');
+        const id = new URLSearchParams(window.location.search).get('id');
+
+        const formatDate = (iso) => {
+            const d = new Date(iso + 'T00:00:00');
+            return isNaN(d) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        };
+
+        fetch('articles.json?v=' + Date.now())
+            .then(res => res.json())
+            .then(articles => {
+                const article = articles.find(a => a.id === id);
+                if (!article) {
+                    container.innerHTML = '<h1>Article not found</h1><p>This article may have been moved or removed.</p>';
+                    return;
+                }
+                document.title = article.title + ' - Sanjana Taware';
+
+                container.innerHTML = '';
+                const h1 = document.createElement('h1');
+                h1.textContent = article.title;
+                const meta = document.createElement('p');
+                meta.className = 'article-meta';
+                meta.textContent = formatDate(article.date);
+                const content = document.createElement('div');
+                content.className = 'article-content';
+                content.innerHTML = article.content;
+
+                container.appendChild(h1);
+                container.appendChild(meta);
+                container.appendChild(content);
+
+                if (article.originalUrl) {
+                    const original = document.createElement('p');
+                    original.className = 'article-original';
+                    original.innerHTML = 'Originally published on <a href="' + article.originalUrl + '" target="_blank">Medium</a>.';
+                    container.appendChild(original);
+                }
+            })
+            .catch(() => {
+                container.innerHTML = '<h1>Something went wrong</h1><p>Couldn\'t load this article. Please try again later.</p>';
+            });
+    });
+    </script>
+</body>
+</html>
