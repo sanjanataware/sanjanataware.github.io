@@ -1023,7 +1023,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     padding: 1rem 1.1rem;
-    background: #ffffff;
+    background: #1a2a52;
     border-bottom: 1px solid #eee6d6;
 }
 
@@ -1031,7 +1031,7 @@ a:hover {
     font-size: 1.05rem;
     line-height: 1.4;
     font-weight: 600;
-    color: #222222;
+    color: #ffffff;
     font-family: Georgia, 'Times New Roman', serif;
     display: -webkit-box;
     -webkit-line-clamp: 4;
