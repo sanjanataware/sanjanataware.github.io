@@ -30,6 +30,36 @@ document.addEventListener('DOMContentLoaded', function() {
         '.email-decoration, .year-animation, .projects-animation, .writing-animation, .classes-animation, .hobbies-animation'
     ).forEach(el => animationObserver.observe(el));
 
+    // --- Section in-view (h1 underline sweep) ---
+    const underlineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                underlineObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    sections.forEach(section => underlineObserver.observe(section));
+
+    // --- Content blocks drift up as they enter the viewport ---
+    // (class added via JS so no-JS visitors still see everything)
+    const revealEls = document.querySelectorAll(
+        '.about-content, .year-block, .class-category, .carousel-wrap, section > p, section > ul, section > h3'
+    );
+    revealEls.forEach(el => el.classList.add('reveal'));
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+
 
     // --- Articles carousel (Writing section) ---
     const carousel = document.getElementById('articles-carousel');
@@ -43,10 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(res => res.json())
             .then(articles => {
                 carousel.innerHTML = '';
-                articles.forEach(article => {
+                articles.forEach((article, index) => {
                     const card = document.createElement('a');
                     card.className = 'article-card';
                     card.href = 'article.html?id=' + encodeURIComponent(article.id);
+                    card.style.setProperty('--i', Math.min(index, 6));
 
                     const thumb = document.createElement('div');
                     thumb.className = 'article-thumb';

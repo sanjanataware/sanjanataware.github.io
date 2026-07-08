@@ -62,6 +62,24 @@ body {
     border-bottom: 1.5px solid transparent;
     transition: color 0.2s ease;
     white-space: nowrap;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1.5px;
+    background-color: #2a9d8f;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1);
 }
 
 .nav-link:hover {
@@ -102,8 +120,30 @@ h1 {
     letter-spacing: 0.01em;
     margin-bottom: 1.5rem;
     color: #264653;
-    border-bottom: 2px solid #e9c46a;
     padding-bottom: 0.5rem;
+    position: relative;
+}
+
+/* Underline sweeps in when the section scrolls into view */
+h1::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #e9c46a 60%, #e76f51);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+}
+
+.tab-section.in-view h1::after {
+    transform: scaleX(1);
+}
+
+.article-page h1::after {
+    display: none;
 }
 
 h2 {
@@ -1023,7 +1063,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     padding: 1rem 1.1rem;
-    background: #1a2a52;
+    background: #264653;
     border-bottom: 1px solid #eee6d6;
 }
 
@@ -1031,7 +1071,7 @@ a:hover {
     font-size: 1.05rem;
     line-height: 1.4;
     font-weight: 600;
-    color: #ffffff;
+    color: #faf9f6;
     font-family: Georgia, 'Times New Roman', serif;
     display: -webkit-box;
     -webkit-line-clamp: 4;
@@ -1132,6 +1172,343 @@ a:hover {
     border-top: 1px solid #e9c46a;
     font-size: 0.9rem;
     color: #2a9d8f;
+}
+
+/* ================================================================
+   Expressive detail animations
+   ================================================================ */
+
+/* Content reveal: blocks drift up as they enter the viewport.
+   The .reveal class is added by JS, so no-JS visitors see everything. */
+.reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Article cards cascade in as they load */
+.article-card {
+    opacity: 0;
+    animation: cardIn 0.55s ease-out forwards;
+    animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* PCB: signal pulses ride the traces, LED heartbeat on the chip */
+.pcb-pulse {
+    opacity: 0;
+}
+
+.year-animation.animate .pcb-pulse-1 {
+    animation: pulseAcross 2.2s linear infinite;
+    animation-delay: 3s;
+}
+
+.year-animation.animate .pcb-pulse-2 {
+    animation: pulseDown 2.2s linear infinite;
+    animation-delay: 3.9s;
+}
+
+@keyframes pulseAcross {
+    0% {
+        opacity: 0;
+        transform: translateX(0);
+    }
+    8% {
+        opacity: 1;
+    }
+    48% {
+        opacity: 1;
+        transform: translateX(36px);
+    }
+    56%, 100% {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+}
+
+@keyframes pulseDown {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+    8% {
+        opacity: 1;
+    }
+    48% {
+        opacity: 1;
+        transform: translateY(36px);
+    }
+    56%, 100% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+}
+
+.pcb-led {
+    opacity: 0;
+}
+
+.year-animation.animate .pcb-led {
+    animation: ledBlink 1.6s ease-in-out infinite;
+    animation-delay: 3s;
+}
+
+@keyframes ledBlink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.15;
+    }
+}
+
+/* EEG: a signal dot rides along the brainwave */
+.eeg-dot {
+    opacity: 0;
+}
+
+@supports (offset-path: path("M 0 0 L 10 10")) {
+    .year-animation.animate .eeg-dot {
+        offset-path: path("M 15 40 L 20 40 L 23 32 L 26 48 L 29 25 L 32 55 L 35 38 L 38 42 L 42 40 L 45 35 L 48 45 L 51 30 L 54 50 L 57 40 L 60 37 L 65 40 L 68 33 L 71 47 L 74 28 L 77 52 L 80 40 L 85 40 L 88 36 L 91 44 L 95 40 L 100 40 L 103 35 L 106 45");
+        offset-rotate: 0deg;
+        animation: eegRide 4.5s linear infinite;
+        animation-delay: 3.2s;
+    }
+}
+
+@keyframes eegRide {
+    0% {
+        offset-distance: 0%;
+        opacity: 0;
+    }
+    6% {
+        opacity: 1;
+    }
+    88% {
+        opacity: 1;
+    }
+    100% {
+        offset-distance: 100%;
+        opacity: 0;
+    }
+}
+
+/* Writing: a pen sweeps across the page as the lines appear */
+.writing-pen {
+    opacity: 0;
+}
+
+.writing-animation.animate .writing-pen {
+    animation:
+        penFadeIn 0.3s ease-out 0.95s forwards,
+        penWrite 1.7s ease-in-out 1s forwards,
+        penIdle 3.2s ease-in-out 3.2s infinite;
+}
+
+@keyframes penFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes penWrite {
+    0% {
+        transform: translate(22px, 22px);
+    }
+    13% {
+        transform: translate(55px, 22px);
+    }
+    17% {
+        transform: translate(22px, 30px);
+    }
+    30% {
+        transform: translate(50px, 30px);
+    }
+    34% {
+        transform: translate(22px, 38px);
+    }
+    47% {
+        transform: translate(58px, 38px);
+    }
+    51% {
+        transform: translate(22px, 46px);
+    }
+    64% {
+        transform: translate(48px, 46px);
+    }
+    68% {
+        transform: translate(22px, 54px);
+    }
+    81% {
+        transform: translate(53px, 54px);
+    }
+    85% {
+        transform: translate(22px, 62px);
+    }
+    98% {
+        transform: translate(45px, 62px);
+    }
+    100% {
+        transform: translate(47px, 61px);
+    }
+}
+
+@keyframes penIdle {
+    0%, 100% {
+        transform: translate(47px, 61px) rotate(0deg);
+    }
+    50% {
+        transform: translate(47px, 59.5px) rotate(-4deg);
+    }
+}
+
+/* Classes: graduation cap lands on the stack, tassel swings */
+.grad-cap {
+    opacity: 0;
+    transform: translateY(-26px);
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.classes-animation.animate .grad-cap {
+    animation:
+        capDrop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s forwards,
+        capSway 4s ease-in-out 3.2s infinite;
+}
+
+@keyframes capDrop {
+    0% {
+        opacity: 0;
+        transform: translateY(-26px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes capSway {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-1.5px) rotate(2deg);
+    }
+}
+
+.grad-tassel {
+    transform-box: fill-box;
+    transform-origin: top left;
+}
+
+.classes-animation.animate .grad-tassel {
+    animation: tasselSwing 2.5s ease-in-out 3s infinite;
+}
+
+@keyframes tasselSwing {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(12deg);
+    }
+}
+
+/* Hobbies: splash droplets kick up as the ball bobs */
+.splash {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.hobbies-animation.animate .splash-1 {
+    animation: splashUp 2.6s ease-out infinite;
+    animation-delay: 2.4s;
+}
+
+.hobbies-animation.animate .splash-2 {
+    animation: splashUp 2.6s ease-out infinite;
+    animation-delay: 2.55s;
+}
+
+.hobbies-animation.animate .splash-3 {
+    animation: splashUp 2.6s ease-out infinite;
+    animation-delay: 2.7s;
+}
+
+@keyframes splashUp {
+    0%, 55% {
+        opacity: 0;
+        transform: translateY(0) scale(0.6);
+    }
+    68% {
+        opacity: 0.9;
+        transform: translateY(-7px) scale(1);
+    }
+    82%, 100% {
+        opacity: 0;
+        transform: translateY(-11px) scale(1.1);
+    }
+}
+
+/* Projects: a glint sweeps across the lens while it searches */
+.mag-glint {
+    opacity: 0;
+}
+
+.projects-animation.animate .mag-glint {
+    animation: glintSweep 4s ease-in-out infinite;
+    animation-delay: 3.5s;
+}
+
+@keyframes glintSweep {
+    0%, 18% {
+        opacity: 0;
+        transform: translate(-16px, 16px);
+    }
+    30% {
+        opacity: 0.85;
+    }
+    42%, 100% {
+        opacity: 0;
+        transform: translate(16px, -16px);
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
 }
 
 /* Footer */
