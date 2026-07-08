@@ -1023,14 +1023,15 @@ a:hover {
     align-items: center;
     justify-content: center;
     padding: 1rem 1.1rem;
-    background: linear-gradient(135deg, #2a9d8f 0%, #264653 100%);
+    background: #ffffff;
+    border-bottom: 1px solid #eee6d6;
 }
 
 .article-thumb-placeholder span {
     font-size: 1.05rem;
     line-height: 1.4;
     font-weight: 600;
-    color: #e9c46a;
+    color: #222222;
     font-family: Georgia, 'Times New Roman', serif;
     display: -webkit-box;
     -webkit-line-clamp: 4;
