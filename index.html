@@ -7,9 +7,105 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
+    <!-- Faint circuit-body background: assembles as the page scrolls -->
+    <div id="circuit-bg" aria-hidden="true">
+        <svg viewBox="0 0 400 760" xmlns="http://www.w3.org/2000/svg">
+            <!-- Head: IC chip -->
+            <g class="c-part" data-s="0.00" data-e="0.14" data-dx="0" data-dy="-46">
+                <rect class="c-line" x="170" y="58" width="60" height="60" rx="9"/>
+                <line class="c-line" x1="164" y1="72" x2="170" y2="72"/>
+                <line class="c-line" x1="164" y1="88" x2="170" y2="88"/>
+                <line class="c-line" x1="164" y1="104" x2="170" y2="104"/>
+                <line class="c-line" x1="230" y1="72" x2="236" y2="72"/>
+                <line class="c-line" x1="230" y1="88" x2="236" y2="88"/>
+                <line class="c-line" x1="230" y1="104" x2="236" y2="104"/>
+                <line class="c-line" x1="188" y1="52" x2="188" y2="58"/>
+                <line class="c-line" x1="212" y1="52" x2="212" y2="58"/>
+                <path class="c-line" d="M182 74 h12 v14"/>
+                <circle class="c-via" cx="200" cy="88" r="4"/>
+            </g>
+            <!-- Neck -->
+            <path class="c-trace" data-s="0.10" data-e="0.18" d="M194 120 V152"/>
+            <path class="c-trace" data-s="0.10" data-e="0.18" d="M206 120 V152"/>
+            <!-- Torso: board outline -->
+            <path class="c-trace" data-s="0.14" data-e="0.34" d="M146 162 C168 150 232 150 254 162 L248 244 C246 292 242 312 236 324 L164 324 C158 312 154 292 152 244 Z"/>
+            <!-- Shoulder pads -->
+            <g class="c-part" data-s="0.30" data-e="0.40" data-dx="-24" data-dy="-10">
+                <circle class="c-pad" cx="146" cy="162" r="4.5"/>
+            </g>
+            <g class="c-part" data-s="0.30" data-e="0.40" data-dx="24" data-dy="-10">
+                <circle class="c-pad" cx="254" cy="162" r="4.5"/>
+            </g>
+            <!-- Spine trace + vias -->
+            <path class="c-trace" data-s="0.30" data-e="0.42" d="M200 152 V318"/>
+            <g class="c-part" data-s="0.38" data-e="0.48" data-dx="0" data-dy="30">
+                <circle class="c-via" cx="200" cy="184" r="3.5"/>
+                <circle class="c-via" cx="200" cy="244" r="3.5"/>
+                <circle class="c-via" cx="200" cy="302" r="3.5"/>
+            </g>
+            <!-- Heart: beating circuit heart with LED -->
+            <g class="c-part" data-s="0.40" data-e="0.52" data-dx="-36" data-dy="18">
+                <g class="c-heartbeat">
+                    <path class="c-heart" d="M170 215 C157 205 151 197 154 190 C156.5 184.5 165 184.5 170 191 C175 184.5 183.5 184.5 186 190 C189 197 183 205 170 215 Z"/>
+                    <circle class="c-led" cx="170" cy="199" r="3"/>
+                </g>
+            </g>
+            <!-- Torso routing -->
+            <path class="c-trace" data-s="0.44" data-e="0.56" d="M187 202 H200"/>
+            <path class="c-trace" data-s="0.44" data-e="0.56" d="M170 216 V232 H186"/>
+            <path class="c-trace" data-s="0.44" data-e="0.56" d="M200 170 H234 L246 162"/>
+            <!-- Left arm with op-amp -->
+            <path class="c-trace" data-s="0.50" data-e="0.58" d="M146 168 L124 190 V198"/>
+            <g class="c-part" data-s="0.56" data-e="0.66" data-dx="-30" data-dy="0">
+                <line class="c-line" x1="120" y1="198" x2="128" y2="198"/>
+                <line class="c-line" x1="120" y1="198" x2="120" y2="202"/>
+                <line class="c-line" x1="128" y1="198" x2="128" y2="202"/>
+                <path class="c-line" d="M116 202 L132 202 L124 228 Z"/>
+                <line class="c-line" x1="124" y1="228" x2="124" y2="234"/>
+                <line class="c-line thin" x1="118.5" y1="207" x2="121.5" y2="207"/>
+                <line class="c-line thin" x1="126.5" y1="207" x2="129.5" y2="207"/>
+                <line class="c-line thin" x1="128" y1="205.5" x2="128" y2="208.5"/>
+            </g>
+            <path class="c-trace" data-s="0.62" data-e="0.70" d="M124 234 V254 L138 310"/>
+            <!-- Right arm with resistor -->
+            <path class="c-trace" data-s="0.50" data-e="0.58" d="M254 168 L276 190 V200"/>
+            <g class="c-part" data-s="0.56" data-e="0.66" data-dx="30" data-dy="0">
+                <path class="c-line" d="M276 200 l7 5 l-14 7 l14 7 l-14 7 l7 5"/>
+            </g>
+            <path class="c-trace" data-s="0.62" data-e="0.70" d="M276 231 V254 L262 310"/>
+            <!-- Elbow vias + hand pads -->
+            <g class="c-part" data-s="0.64" data-e="0.74" data-dx="0" data-dy="26">
+                <circle class="c-via" cx="124" cy="254" r="3.5"/>
+                <circle class="c-via" cx="276" cy="254" r="3.5"/>
+                <circle class="c-pad" cx="140" cy="316" r="4.5"/>
+                <circle class="c-pad" cx="260" cy="316" r="4.5"/>
+            </g>
+            <!-- Left leg with capacitor at the knee -->
+            <path class="c-trace" data-s="0.70" data-e="0.78" d="M178 324 L172 412"/>
+            <g class="c-part" data-s="0.76" data-e="0.84" data-dx="-30" data-dy="0">
+                <line class="c-line" x1="162" y1="418" x2="182" y2="418"/>
+                <line class="c-line" x1="162" y1="427" x2="182" y2="427"/>
+                <line class="c-line" x1="172" y1="412" x2="172" y2="418"/>
+                <line class="c-line" x1="172" y1="427" x2="172" y2="433"/>
+            </g>
+            <path class="c-trace" data-s="0.78" data-e="0.86" d="M172 433 L174 516 V532 H154"/>
+            <!-- Right leg with inductor at the knee -->
+            <path class="c-trace" data-s="0.70" data-e="0.78" d="M222 324 L228 412"/>
+            <g class="c-part" data-s="0.76" data-e="0.84" data-dx="30" data-dy="0">
+                <path class="c-line" d="M228 412 A5 5 0 0 1 228 422 A5 5 0 0 1 228 432 A5 5 0 0 1 228 442"/>
+            </g>
+            <path class="c-trace" data-s="0.78" data-e="0.86" d="M228 442 L226 516 V532 H246"/>
+            <!-- Foot pads -->
+            <g class="c-part" data-s="0.84" data-e="0.93" data-dx="0" data-dy="24">
+                <circle class="c-pad" cx="150" cy="532" r="4.5"/>
+                <circle class="c-pad" cx="250" cy="532" r="4.5"/>
+            </g>
+        </svg>
+    </div>
+
     <nav id="topnav">
         <div class="nav-name">Sanjana Taware</div>
         <div class="nav-links">
@@ -28,7 +124,7 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>Hi! My name is Sanjana Taware and I'm an undergrad at <a href="https://eecs.berkeley.edu/" target="_blank">UC Berkeley</a> studying Electrical Engineering and Computer Science with a minor in Bioengineering. I'm interested in the intersection of healthcare and technology, exploring machine learning, neuroscience, biotechnology, and hardware design.</p>
-                    <p>I'm always looking to learn more, engage in new experiences, and collaborate.</p>
+                    <p>I'm always looking to learn more, engage in new experiences, and collaborate!</p>
                     <div class="contact">
                         <p><a href="https://www.linkedin.com/in/sanjana-taware-2880a5168/" target="_blank">LinkedIn</a></p>
                         <p>Email: sanjana[dot]taware[at]berkeley[dot]edu</p>
@@ -336,6 +432,6 @@
     </footer>
 
     <div id="spotlight"></div>
-<script src="script.js?v=2"></script>
+<script src="script.js?v=6"></script>
 </body>
 </html>

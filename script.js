@@ -127,6 +127,61 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
+    // --- Circuit-body background assembles on scroll ---
+    const circuitBg = document.getElementById('circuit-bg');
+    if (circuitBg && getComputedStyle(circuitBg).display !== 'none') {
+        const traces = Array.from(circuitBg.querySelectorAll('.c-trace'));
+        const parts = Array.from(circuitBg.querySelectorAll('.c-part'));
+
+        traces.forEach(p => {
+            const len = p.getTotalLength();
+            p.dataset.len = len;
+            p.style.strokeDasharray = len;
+            p.style.strokeDashoffset = len;
+        });
+
+        // Smoothstep clamp of progress into an element's [data-s, data-e] window
+        const clamp01 = t => t < 0 ? 0 : t > 1 ? 1 : t;
+        const stage = (el, progress) => {
+            const s = parseFloat(el.dataset.s || 0);
+            const e = parseFloat(el.dataset.e || 1);
+            const t = clamp01((progress - s) / (e - s));
+            return t * t * (3 - 2 * t);
+        };
+
+        const render = (progress) => {
+            traces.forEach(p => {
+                p.style.strokeDashoffset = p.dataset.len * (1 - stage(p, progress));
+            });
+            parts.forEach(g => {
+                const t = stage(g, progress);
+                const dx = parseFloat(g.dataset.dx || 0) * (1 - t);
+                const dy = parseFloat(g.dataset.dy || 0) * (1 - t);
+                g.style.opacity = t;
+                g.style.transform = `translate(${dx}px, ${dy}px)`;
+            });
+            circuitBg.classList.toggle('assembled', progress > 0.93);
+        };
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            render(1);
+        } else {
+            let ticking = false;
+            const onScroll = () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    const max = document.documentElement.scrollHeight - window.innerHeight;
+                    render(max > 0 ? clamp01(window.scrollY / max) : 1);
+                    ticking = false;
+                });
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll, { passive: true });
+            onScroll();
+        }
+    }
+
     // --- Spotlight cursor effect ---
     const spotlight = document.getElementById('spotlight');
     document.addEventListener('mousemove', (e) => {
